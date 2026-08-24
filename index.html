@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#d94f88">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon-192.png">
+<title>Merge Reprodutivo</title>
+<style>
+*{box-sizing:border-box} html,body{margin:0;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#7b234f;color:#4a1630;overflow:hidden}
+body{background-image:linear-gradient(#8d245f55,#5a173955),url('assets/fundo.png');background-size:cover;background-position:center}
+#app{height:100dvh;display:grid;grid-template-rows:auto 1fr auto;gap:8px;padding:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom))}
+.top{display:flex;gap:7px;align-items:center;justify-content:center;flex-wrap:wrap}
+.pill,.btn{border:2px solid #fff8;background:#ffd9e8e8;box-shadow:0 4px 14px #4b173955,inset 0 1px #fff;border-radius:18px;padding:7px 11px;font-weight:900;backdrop-filter:blur(5px)}
+.btn{cursor:pointer;min-height:42px}.btn:disabled{opacity:.45}.btn:active{transform:scale(.97)}
+#stageWrap{position:relative;min-height:0;width:min(96vw,720px);margin:auto;aspect-ratio:3/4;max-height:78dvh;border:4px solid #ffc6db;border-radius:34px;overflow:hidden;background:#7a28536e;box-shadow:0 12px 40px #310d2f99,inset 0 0 35px #fff4}
+canvas{width:100%;height:100%;display:block;touch-action:none}
+#danger{position:absolute;left:5%;right:5%;top:16%;border-top:3px dashed #ffdf4d;filter:drop-shadow(0 0 5px #f60);pointer-events:none}
+#next{position:absolute;right:10px;top:10px;width:58px;height:58px;border-radius:50%;object-fit:cover;border:3px solid white;background:#ffd6e7;box-shadow:0 3px 12px #6c234a}
+#tip{position:absolute;left:50%;top:8px;transform:translateX(-50%);font-size:12px;background:#fff9;padding:5px 9px;border-radius:12px;font-weight:800;white-space:nowrap}
+.controls{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+#toast{position:fixed;left:50%;top:48%;transform:translate(-50%,-50%) scale(.9);background:#40102eea;color:white;padding:15px 20px;border-radius:18px;font-size:20px;font-weight:900;opacity:0;pointer-events:none;transition:.2s;z-index:20;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.modal{position:fixed;inset:0;background:#21071dcc;display:none;place-items:center;z-index:30;padding:14px}
+.modal.show{display:grid}.card{width:min(92vw,700px);max-height:92dvh;overflow:auto;background:#ffe5ef;border:3px solid #fff;border-radius:26px;padding:16px;box-shadow:0 15px 50px #0008;text-align:center}
+.card img{max-width:100%;border-radius:18px}.card video{width:100%;max-height:68dvh;border-radius:18px;background:#000}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}.choice{background:#fff7fb;border:2px solid #e985ad;border-radius:16px;padding:7px;font-weight:800;cursor:pointer}.choice img{width:70px;height:70px;object-fit:cover;border-radius:50%}
+.small{font-size:12px}.gold{color:#9a5b00}
+@media(max-width:520px){.pill{font-size:12px;padding:6px 8px}.btn{font-size:12px;padding:7px 9px}#stageWrap{width:98vw;max-height:74dvh}}
+
+body.highcontrast{filter:contrast(1.35) saturate(1.15)}
+body.bigfont{font-size:120%}
+body.bigfont .btn,body.bigfont .pill{font-size:1em}
+#stageWrap:after{content:"";position:absolute;inset:-25%;pointer-events:none;background:radial-gradient(circle at 50% 75%,#fff3 0 3%,transparent 28%),radial-gradient(circle at 25% 20%,#ffdfef33,transparent 30%);animation:glow 5s ease-in-out infinite alternate}
+@keyframes glow{to{transform:scale(1.08) rotate(1deg);opacity:.65}}
+#librasBox{position:fixed;right:12px;bottom:84px;width:min(300px,72vw);background:#271127ee;color:#fff;border:3px solid #ffd5e6;border-radius:22px;padding:12px;z-index:25;display:none;box-shadow:0 12px 40px #0008}
+#librasBox.show{display:block} #librasBox .hands{font-size:58px;line-height:1;text-align:center;animation:hands .75s ease-in-out infinite alternate}
+@keyframes hands{to{transform:rotate(7deg) scale(1.06)}} #librasBox strong{display:block;text-align:center;margin:8px}
+#srStatus{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+body.phase2 #stageWrap{width:82%;max-width:680px;margin-left:auto;margin-right:auto}
+#phaseBadge{position:absolute;z-index:12;top:8px;left:50%;transform:translateX(-50%);
+background:rgba(255,240,247,.94);border:2px solid #ffafd0;color:#7d1749;border-radius:999px;
+padding:5px 12px;font-weight:900;pointer-events:none}
+@media(max-width:700px){body.phase2 #stageWrap{width:88%}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🪙 <span id="coins">0</span></div>
+    <div class="pill">❤️ Chances: <span id="lives">2</span></div>
+    <div class="pill">🏆 <span id="level">Óvulo</span></div>
+  </div>
+  <div id="stageWrap"><div id="phaseBadge">FASE 1</div>
+    <canvas id="game"></canvas>
+    <div id="danger"></div>
+    <div id="tip">Toque para soltar • iguais se fundem</div>
+    <img id="next" alt="Próxima peça">
+  </div>
+  <div class="controls">
+    <button class="btn" id="shake">🫨 Chacoalhar 1×</button>
+    <button class="btn" id="replace">🔄 Substituir 1×</button>
+    <button class="btn" id="info">🧬 Blastocisto</button>
+    <button class="btn" id="libras">🤟 Libras</button>
+    <button class="btn" id="tts">🗣️ Leitura</button>
+    <button class="btn" id="contrast">◐ Contraste</button>
+    <button class="btn" id="font">A+ Fonte</button>
+    <button class="btn" id="sound">🔊 Som</button>
+    <button class="btn" id="restart">↻ Reiniciar</button>
+  </div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="srStatus" aria-live="assertive"></div>
+<div id="librasBox" role="dialog" aria-label="Apoio visual em Libras">
+ <div class="hands">🤟</div><strong>APOIO EM LIBRAS</strong>
+ <div id="librasText">Junte duas estruturas iguais para formar a próxima. Toque na tela para soltar a peça.</div>
+ <button class="btn" onclick="document.getElementById('librasBox').classList.remove('show')">Fechar</button>
+</div>
+
+<div class="modal" id="replaceModal"><div class="card">
+  <h2>Substituir uma estrutura</h2>
+  <p>Primeiro toque em uma peça no tabuleiro. Depois escolha a nova estrutura.</p>
+  <div class="grid" id="choices"></div>
+  <button class="btn" onclick="closeReplace()">Cancelar</button>
+</div></div>
+
+<div class="modal" id="infoModal"><div class="card">
+  <h2>Blastocisto</h2>
+  <img src="assets/blastocisto_info.png" alt="Imagem didática do blastocisto">
+  <p class="small">Imagem didática fornecida para o jogo.</p>
+  <button class="btn" onclick="document.getElementById('infoModal').classList.remove('show')">Fechar</button>
+</div></div>
+
+<div class="modal" id="winModal"><div class="card">
+  <h1>🏆 Bebê saudável!</h1>
+  <p>Você completou a sequência!</p>
+  <video id="winVideo" src="assets/vitoria.mp4" playsinline controls></video>
+  <div style="margin-top:10px"><button class="btn" onclick="newGame()">Jogar novamente</button> <button class="btn" onclick="continueGame()">Continuar</button></div>
+</div></div>
+
+<script>
+const LEVELS=[
+ {n:"Óvulo",img:"assets/ovulo.png",r:22,pts:10},
+ {n:"Zigoto",img:"assets/zigoto.png",r:27,pts:20},
+ {n:"Mórula",img:"assets/morula.png",r:33,pts:40},
+ {n:"Blastocisto",img:"assets/blastocisto.png",r:40,pts:80},
+ {n:"Tuba / ovulação",img:"assets/tuba.png",r:47,pts:140},
+ {n:"Ovário",img:"assets/ovario.png",r:54,pts:220},
+ {n:"Colo do útero",img:"assets/colo.png",r:61,pts:320},
+ {n:"Embrião",img:"assets/embriao.png",r:69,pts:460},
+ {n:"Sistema genital",img:"assets/utero.png",r:78,pts:650},
+ {n:"Bebê saudável",img:"assets/bebe.png",r:90,pts:1000}
+];
+const imgs=LEVELS.map(x=>{let i=new Image();i.src=x.img;return i});
+const c=document.getElementById("game"),ctx=c.getContext("2d"),wrap=document.getElementById("stageWrap");
+let W=600,H=800,balls=[],nextLevel=0,score=0,coins=0,lives=2,shakeUsed=false,replaceUsed=false,soundOn=true,paused=false,last=performance.now(),dangerTimer=0,grace=0,selected=null;
+const nextEl=document.getElementById("next"), toastEl=document.getElementById("toast");
+function resize(){let r=wrap.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;c.width=W*d;c.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
+addEventListener("resize",resize);resize();
+function beep(f=520,d=.07){if(!soundOn)return;try{let a=new (AudioContext||webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.frequency.value=f;g.gain.value=.05;o.connect(g);g.connect(a.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,a.currentTime+d);o.stop(a.currentTime+d)}catch(e){}}
+function toast(t){toastEl.textContent=t;toastEl.classList.add("show");setTimeout(()=>toastEl.classList.remove("show"),1100)}
+function setNext(){nextLevel=Math.random()<.72?0:(Math.random()<.78?1:2);nextEl.src=LEVELS[nextLevel].img}
+function drop(x){
+playGameAudio('audioAcerto');if(paused)return;let L=LEVELS[nextLevel],r=L.r;balls.push({x:Math.max(r+3,Math.min(W-r-3,x)),y:30+r,vx:0,vy:520,lv:nextLevel,r,mergeLock:.06});beep(360);setNext()}
+c.addEventListener("pointerdown",e=>{
+ const rect=c.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;
+ if(selected==="pick"){let b=nearest(x,y);if(b){selected=b;openChoices();}return}
+ drop(x);
+});
+function nearest(x,y){let best=null,bd=1e9;for(let b of balls){let d=Math.hypot(b.x-x,b.y-y);if(d<b.r+15&&d<bd){best=b;bd=d}}return best}
+function merge(i,j){
+ let a=balls[i],b=balls[j]; if(!a||!b||a.lv!==b.lv||a.lv>=LEVELS.length-1)return false;
+ let nl=a.lv+1,x=(a.x+b.x)/2,y=(a.y+b.y)/2,vx=(a.vx+b.vx)/2,vy=-70;
+ let hi=Math.max(i,j),lo=Math.min(i,j);balls.splice(hi,1);balls.splice(lo,1);
+ let L=LEVELS[nl];balls.push({x,y,vx,vy,lv:nl,r:L.r,mergeLock:.10});
+ score+=L.pts;coins+=Math.max(1,nl);document.getElementById("score").textContent=score;document.getElementById("coins").textContent=coins;document.getElementById("level").textContent=L.n;
+ beep(520+nl*55,.1); if(nl===LEVELS.length-1)win(); return true;
+}
+function physics(dt){
+ const floor=H-8;
+ for(let b of balls){b.mergeLock=Math.max(0,b.mergeLock-dt);b.vy+=2100*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.vx*=.995;
+  if(b.x-b.r<4){b.x=b.r+4;b.vx=Math.abs(b.vx)*.55}
+  if(b.x+b.r>W-4){b.x=W-b.r-4;b.vx=-Math.abs(b.vx)*.55}
+  if(b.y+b.r>floor){b.y=floor-b.r;b.vy*=-.18;b.vx*=.82;if(Math.abs(b.vy)<20)b.vy=0}
+ }
+ for(let k=0;k<3;k++){
+  let merged=false;
+  outer:for(let i=0;i<balls.length;i++)for(let j=i+1;j<balls.length;j++){
+   let a=balls[i],b=balls[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||.001,min=a.r+b.r;
+   if(d<min){
+    if(a.lv===b.lv&&a.mergeLock<=0&&b.mergeLock<=0){merged=merge(i,j);if(merged)break outer}
+    let nx=dx/d,ny=dy/d,ov=min-d,wa=b.r/(a.r+b.r),wb=a.r/(a.r+b.r);
+    a.x-=nx*ov*wa;a.y-=ny*ov*wa;b.x+=nx*ov*wb;b.y+=ny*ov*wb;
+    let rvx=b.vx-a.vx,rvy=b.vy-a.vy,rel=rvx*nx+rvy*ny;
+    if(rel<0){let imp=-rel*.35;a.vx-=imp*nx;a.vy-=imp*ny;b.vx+=imp*nx;b.vy+=imp*ny}
+   }
+  } if(!merged)break;
+ }
+ if(grace>0){grace-=dt;dangerTimer=0;return}
+ let line=H*.16,over=balls.some(b=>b.y-b.r<line && Math.abs(b.vy)<45);
+ dangerTimer=over?dangerTimer+dt:0;
+ if(dangerTimer>.85){dangerTimer=0;loseChance()}
+}
+function loseChance(){
+ if(lives>0){lives--;document.getElementById("lives").textContent=lives;toast("❤️ Chance usada! Tabuleiro aliviado.");beep(180,.18);
+  balls.sort((a,b)=>a.y-b.y);balls.splice(0,Math.max(2,Math.ceil(balls.length*.22)));grace=2.2;
+ }else{paused=true;toast("Fim de jogo");setTimeout(()=>{if(confirm("Fim de jogo. Jogar novamente?"))newGame()},500)}
+}
+function draw(){
+ ctx.clearRect(0,0,W,H);
+ let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#6d1c5066");g.addColorStop(1,"#ffbad055");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ for(let b of balls){ctx.save();ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.clip();let im=imgs[b.lv];if(im.complete)ctx.drawImage(im,b.x-b.r,b.y-b.r,b.r*2,b.r*2);ctx.restore();
+  ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.stroke();
+  ctx.beginPath();ctx.arc(b.x-b.r*.28,b.y-b.r*.32,b.r*.18,0,Math.PI*2);ctx.fillStyle="#ffffff55";ctx.fill();
+ }
+}
+function loop(t){let dt=Math.min(.025,(t-last)/1000);last=t;if(!paused)physics(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+document.getElementById("shake").onclick=()=>{
+ if(shakeUsed)return;shakeUsed=true;document.getElementById("shake").disabled=true;grace=3;
+ for(let b of balls){b.vx+=(Math.random()-.5)*700;b.vy=-180-Math.random()*220}toast("🫨 Chacoalhada grátis!");beep(700,.12)
+};
+document.getElementById("replace").onclick=()=>{if(replaceUsed)return;selected="pick";toast("Toque na peça que deseja substituir")};
+function openChoices(){let box=document.getElementById("choices");box.innerHTML="";LEVELS.slice(0,-1).forEach((L,i)=>{let d=document.createElement("div");d.className="choice";d.innerHTML=`<img src="${L.img}"><div>${L.n}</div>`;d.onclick=()=>replaceWith(i);box.appendChild(d)});document.getElementById("replaceModal").classList.add("show")}
+function replaceWith(lv){if(!selected||selected==="pick")return;selected.lv=lv;selected.r=LEVELS[lv].r;selected.mergeLock=.4;replaceUsed=true;document.getElementById("replace").disabled=true;document.getElementById("replaceModal").classList.remove("show");selected=null;grace=1.5;toast("🔄 Estrutura substituída!")}
+function closeReplace(){document.getElementById("replaceModal").classList.remove("show");selected=null}
+document.getElementById("info").onclick=()=>document.getElementById("infoModal").classList.add("show");
+document.getElementById("sound").onclick=e=>{soundOn=!soundOn;e.target.textContent=soundOn?"🔊 Som":"🔇 Som"};
+document.getElementById("restart").onclick=()=>{if(confirm("Reiniciar a partida?"))newGame()};
+function win(){playGameAudio('audioVitoria');paused=true;coins+=50;document.getElementById("coins").textContent=coins;setTimeout(()=>{let m=document.getElementById("winModal");m.classList.add("show");let v=document.getElementById("winVideo");v.currentTime=0;v.play().catch(()=>{})},450)}
+function newGame(){balls=[];score=0;coins=0;lives=2;shakeUsed=false;replaceUsed=false;paused=false;dangerTimer=0;grace=1.5;selected=null;
+ document.getElementById("score").textContent=0;document.getElementById("coins").textContent=0;document.getElementById("lives").textContent=2;document.getElementById("level").textContent="Óvulo";document.getElementById("shake").disabled=false;document.getElementById("replace").disabled=false;document.getElementById("winModal").classList.remove("show");document.getElementById("winVideo").pause();setNext()}
+function continueGame(){document.getElementById("winModal").classList.remove("show");document.getElementById("winVideo").pause();paused=false;grace=3}
+
+function speak(txt){
+ if(!("speechSynthesis" in window))return toast("Leitura de voz não disponível neste navegador.");
+ speechSynthesis.cancel(); let u=new SpeechSynthesisUtterance(txt);u.lang="pt-BR";u.rate=.92;speechSynthesis.speak(u);
+ document.getElementById("srStatus").textContent=txt;
+}
+document.getElementById("tts").onclick=()=>speak("Merge Reprodutivo. Junte duas estruturas iguais para criar a próxima. Você tem duas chances. Há uma chacoalhada e uma substituição por partida. A vitória acontece ao formar o bebê saudável.");
+document.getElementById("libras").onclick=()=>document.getElementById("librasBox").classList.toggle("show");
+document.getElementById("contrast").onclick=()=>document.body.classList.toggle("highcontrast");
+document.getElementById("font").onclick=()=>document.body.classList.toggle("bigfont");
+document.querySelectorAll("button").forEach(b=>b.setAttribute("aria-label",b.textContent.trim()));
+
+
+function playGameAudio(id){
+ const a=document.getElementById(id);
+ if(a){a.currentTime=0;a.play().catch(()=>{});}
+}
+
+setNext();
+
+let safePhase=1;
+function safePhaseCheck(){
+ try{
+   if(safePhase===1 && typeof score!=="undefined" && score>=1200){
+     safePhase=2;
+     document.body.classList.add("phase2");
+     const pb=document.getElementById("phaseBadge");
+     if(pb) pb.textContent="FASE 2 • ESPAÇO MENOR";
+     if(typeof toast==="function") toast("FASE 2: espaço menor!");
+   }
+ }catch(e){}
+}
+function safeLiquefier(){
+ try{
+   if(typeof shakeUsed!=="undefined" && shakeUsed){
+     if(typeof toast==="function") toast("Liquidificador já utilizado.");
+     return;
+   }
+   if(typeof shakeUsed!=="undefined") shakeUsed=true;
+   if(typeof playGameAudio==="function") playGameAudio("audioFusao");
+   if(typeof balls!=="undefined" && Array.isArray(balls)){
+     // Shake like a blender: random impulses only. Do NOT rewrite positions or run timers.
+     balls.forEach(function(b){
+       if(!b) return;
+       if(typeof b.vx==="number") b.vx += (Math.random()-.5)*900;
+       if(typeof b.vy==="number") b.vy += -250-Math.random()*350;
+     });
+   }
+   if(typeof toast==="function") toast("🌪️ Liquidificador! Estruturas misturadas sem perder chance.");
+ }catch(e){
+   console.warn("Liquefier fallback",e);
+ }
+}
+
+if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+
+setTimeout(function(){
+ const b=document.getElementById("shake");
+ if(b){
+   b.onclick=function(ev){if(ev){ev.preventDefault();ev.stopPropagation();}safeLiquefier();};
+   b.textContent="🌪️ Liquidificador";
+   b.setAttribute("aria-label","Liquidificador: mistura as estruturas sem perder chance");
+ }
+},0);
+setInterval(safePhaseCheck,700);
+
+</script>
+
+<audio id="audioAcerto" preload="auto" src="assets/acerto.mp3"></audio>
+<audio id="audioFusao" preload="auto" src="assets/fusao.mp3"></audio>
+<audio id="audioVitoria" preload="auto" src="assets/vitoria.mp3"></audio>
+</body></html>
