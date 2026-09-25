@@ -6,48 +6,111 @@
 <meta name="theme-color" content="#d94f88">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="assets/icon-192.png">
-<title>Merge Reprodutivo</title>
+<title>Merge Reprodutor</title>
 <style>
-*{box-sizing:border-box} html,body{margin:0;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#7b234f;color:#4a1630;overflow:hidden}
-body{background-image:linear-gradient(#8d245f55,#5a173955),url('assets/fundo.png');background-size:cover;background-position:center}
+:root{--font-scale:1;--pink:#d94f88;--wine:#4a1630;--deep:#271127;--cream:#fff7fb;--glass:#ffe5efe8;--line:#ffc6db;--focus:#fff3a5}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#7b234f;color:var(--wine);overflow:hidden;font-size:calc(16px * var(--font-scale))}
+button,input,a{font:inherit}button{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible{outline:4px solid var(--focus);outline-offset:3px}
+body{background-image:linear-gradient(#8d245f66,#5a173966),url('assets/fundo.png');background-size:cover;background-position:center}
+.screen-hidden{display:none!important}
+
+/* MENU PRINCIPAL */
+#homeScreen{height:100dvh;overflow:auto;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));display:grid;place-items:center;position:relative}
+#homeScreen:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 14%,#ffd7e855,transparent 28%),radial-gradient(circle at 82% 88%,#ffffff2e,transparent 30%)}
+.menu-shell{width:min(94vw,880px);min-height:min(92dvh,780px);position:relative;display:grid;grid-template-rows:auto 1fr auto;gap:18px;padding:clamp(18px,3vw,34px);border:2px solid #ffffffa8;border-radius:34px;background:linear-gradient(160deg,#fff6fbef,#ffddeaeb);box-shadow:0 24px 70px #25071899,inset 0 1px #fff;backdrop-filter:blur(10px);overflow:hidden}
+.menu-shell:after{content:"";position:absolute;inset:14px;border:1px solid #9f326b33;border-radius:25px;pointer-events:none}
+.menu-head{text-align:center;position:relative;z-index:2;padding-top:8px}
+.museum-kicker{display:inline-flex;gap:8px;align-items:center;border:1px solid #9f326b44;background:#fff8;padding:7px 12px;border-radius:999px;font-weight:800;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:#732046}
+.menu-title{margin:12px 0 4px;font-size:clamp(2.2rem,7vw,4.9rem);line-height:.95;letter-spacing:.035em;color:#6e1845;text-shadow:0 2px #fff,0 10px 24px #8f2e6255}
+.menu-subtitle{margin:10px auto 0;max-width:650px;font-size:clamp(.92rem,2vw,1.08rem);line-height:1.45;color:#623148}
+.menu-visuals{position:absolute;inset:0;pointer-events:none;opacity:.2}
+.menu-visuals img{position:absolute;width:clamp(60px,11vw,110px);aspect-ratio:1;object-fit:cover;border-radius:50%;border:3px solid white;box-shadow:0 10px 25px #4c133955}
+.menu-visuals img:nth-child(1){left:2%;top:11%;transform:rotate(-8deg)}.menu-visuals img:nth-child(2){right:2%;top:15%;transform:rotate(7deg)}.menu-visuals img:nth-child(3){right:7%;bottom:16%;transform:rotate(-5deg)}
+.menu-actions{align-self:center;justify-self:center;width:min(100%,470px);display:grid;gap:12px;position:relative;z-index:2}
+.menu-btn,.settings-fab{border:2px solid #ffffffb8;background:linear-gradient(180deg,#fff8fc,#ffd0e2);color:#571b38;box-shadow:0 7px 18px #561a3e35,inset 0 1px white;border-radius:18px;font-weight:900;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,filter .16s ease;min-height:52px;padding:12px 18px}
+.menu-btn:hover,.settings-fab:hover{transform:translateY(-2px);box-shadow:0 11px 24px #561a3e45,inset 0 1px white;filter:saturate(1.08)}
+.menu-btn:active,.settings-fab:active{transform:translateY(1px) scale(.985)}
+.menu-btn.primary{min-height:62px;background:linear-gradient(180deg,#e35d96,#b62869);color:white;border-color:#ffe4ef;box-shadow:0 10px 25px #8d245f66,inset 0 1px #ffb7d2}
+.menu-btn .btn-icon{display:inline-block;min-width:1.6em}.menu-btn small{display:block;font-size:.72rem;font-weight:650;opacity:.82;margin-top:2px}
+.settings-fab{position:absolute;right:clamp(18px,3vw,30px);top:clamp(18px,3vw,30px);z-index:5;width:48px;height:48px;min-height:48px;padding:0;border-radius:50%;display:grid;place-items:center;font-size:1.25rem;background:#fff1f7ee}
+.project-footer{text-align:center;position:relative;z-index:2;padding-top:14px;border-top:1px solid #8d245f33;color:#5e2b43;font-size:.76rem;line-height:1.45}
+.project-footer strong{display:block;color:#55172f;font-size:.82rem}.credit-names{margin-top:5px;display:flex;justify-content:center;gap:4px 10px;flex-wrap:wrap}
+
+/* JOGO EXISTENTE */
 #app{height:100dvh;display:grid;grid-template-rows:auto 1fr auto;gap:8px;padding:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom))}
 .top{display:flex;gap:7px;align-items:center;justify-content:center;flex-wrap:wrap}
 .pill,.btn{border:2px solid #fff8;background:#ffd9e8e8;box-shadow:0 4px 14px #4b173955,inset 0 1px #fff;border-radius:18px;padding:7px 11px;font-weight:900;backdrop-filter:blur(5px)}
-.btn{cursor:pointer;min-height:42px}.btn:disabled{opacity:.45}.btn:active{transform:scale(.97)}
+.btn{cursor:pointer;min-height:42px;transition:transform .14s ease,filter .14s ease}.btn:hover{filter:brightness(1.04)}.btn:disabled{opacity:.45}.btn:active{transform:scale(.97)}
 #stageWrap{position:relative;min-height:0;width:min(96vw,720px);margin:auto;aspect-ratio:3/4;max-height:78dvh;border:4px solid #ffc6db;border-radius:34px;overflow:hidden;background:#7a28536e;box-shadow:0 12px 40px #310d2f99,inset 0 0 35px #fff4}
 canvas{width:100%;height:100%;display:block;touch-action:none}
 #danger{position:absolute;left:5%;right:5%;top:16%;border-top:3px dashed #ffdf4d;filter:drop-shadow(0 0 5px #f60);pointer-events:none}
 #next{position:absolute;right:10px;top:10px;width:58px;height:58px;border-radius:50%;object-fit:cover;border:3px solid white;background:#ffd6e7;box-shadow:0 3px 12px #6c234a}
 #tip{position:absolute;left:50%;top:8px;transform:translateX(-50%);font-size:12px;background:#fff9;padding:5px 9px;border-radius:12px;font-weight:800;white-space:nowrap}
 .controls{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
-#toast{position:fixed;left:50%;top:48%;transform:translate(-50%,-50%) scale(.9);background:#40102eea;color:white;padding:15px 20px;border-radius:18px;font-size:20px;font-weight:900;opacity:0;pointer-events:none;transition:.2s;z-index:20;text-align:center}
+#toast{position:fixed;left:50%;top:48%;transform:translate(-50%,-50%) scale(.9);background:#40102eea;color:white;padding:15px 20px;border-radius:18px;font-size:20px;font-weight:900;opacity:0;pointer-events:none;transition:.2s;z-index:60;text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
-.modal{position:fixed;inset:0;background:#21071dcc;display:none;place-items:center;z-index:30;padding:14px}
-.modal.show{display:grid}.card{width:min(92vw,700px);max-height:92dvh;overflow:auto;background:#ffe5ef;border:3px solid #fff;border-radius:26px;padding:16px;box-shadow:0 15px 50px #0008;text-align:center}
-.card img{max-width:100%;border-radius:18px}.card video{width:100%;max-height:68dvh;border-radius:18px;background:#000}
+
+/* MODAIS */
+.modal{position:fixed;inset:0;background:#21071ddd;display:none;place-items:center;z-index:50;padding:14px;backdrop-filter:blur(5px)}
+.modal.show{display:grid}.card{width:min(92vw,700px);max-height:92dvh;overflow:auto;background:#ffe5ef;border:3px solid #fff;border-radius:26px;padding:clamp(16px,3vw,28px);box-shadow:0 15px 50px #0008;text-align:center}
+.card.wide{width:min(94vw,820px);text-align:left}.card h1,.card h2{color:#671b43;margin-top:0}.card h3{color:#78234d;margin-bottom:5px}.card p,.card li{line-height:1.55}.card img{max-width:100%;border-radius:18px}.card video{width:100%;max-height:68dvh;border-radius:18px;background:#000}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}.choice{background:#fff7fb;border:2px solid #e985ad;border-radius:16px;padding:7px;font-weight:800;cursor:pointer}.choice img{width:70px;height:70px;object-fit:cover;border-radius:50%}
-.small{font-size:12px}.gold{color:#9a5b00}
-@media(max-width:520px){.pill{font-size:12px;padding:6px 8px}.btn{font-size:12px;padding:7px 9px}#stageWrap{width:98vw;max-height:74dvh}}
+.small{font-size:.78rem}.gold{color:#9a5b00}.modal-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}.modal-actions .btn{min-width:130px}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}.how-step{background:#fff8fb;border:1px solid #bd5d8538;border-radius:18px;padding:13px;text-align:center}.how-step b{display:block;color:#6d1c4b;margin:5px 0}.how-step .step-icon{font-size:2rem}
+.sequence{display:flex;gap:7px;overflow:auto;padding:8px 2px 12px;scrollbar-width:thin}.seq-item{min-width:94px;background:#fff9;border:1px solid #bc5e853d;border-radius:14px;padding:8px;text-align:center;font-size:.74rem;font-weight:800}.seq-item img{width:54px;height:54px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 5px}
+.museum-note{background:#fff9;border-left:5px solid #b62f6b;border-radius:14px;padding:12px 14px;margin:14px 0}.museum-link{display:inline-flex;align-items:center;gap:6px;color:#711b49;font-weight:900}
 
-body.highcontrast{filter:contrast(1.35) saturate(1.15)}
-body.bigfont{font-size:120%}
-body.bigfont .btn,body.bigfont .pill{font-size:1em}
-#stageWrap:after{content:"";position:absolute;inset:-25%;pointer-events:none;background:radial-gradient(circle at 50% 75%,#fff3 0 3%,transparent 28%),radial-gradient(circle at 25% 20%,#ffdfef33,transparent 30%);animation:glow 5s ease-in-out infinite alternate}
-@keyframes glow{to{transform:scale(1.08) rotate(1deg);opacity:.65}}
-#librasBox{position:fixed;right:12px;bottom:84px;width:min(300px,72vw);background:#271127ee;color:#fff;border:3px solid #ffd5e6;border-radius:22px;padding:12px;z-index:25;display:none;box-shadow:0 12px 40px #0008}
-#librasBox.show{display:block} #librasBox .hands{font-size:58px;line-height:1;text-align:center;animation:hands .75s ease-in-out infinite alternate}
-@keyframes hands{to{transform:rotate(7deg) scale(1.06)}} #librasBox strong{display:block;text-align:center;margin:8px}
+/* CONFIGURAÇÕES */
+.settings-list{display:grid;gap:12px}.settings-group{background:#fff8fb;border:1px solid #bd5d8540;border-radius:18px;padding:14px}.settings-group h3{margin:0 0 10px}.setting-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid #8d245f22}.setting-row:last-child{border-bottom:0}.setting-copy strong{display:block}.setting-copy small{display:block;color:#755164;margin-top:2px}.switch{position:relative;width:52px;height:30px;display:inline-block}.switch input{opacity:0;width:1px;height:1px}.slider{position:absolute;inset:0;background:#bfa4b1;border-radius:999px;cursor:pointer;transition:.2s;border:1px solid #fff}.slider:before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:white;border-radius:50%;box-shadow:0 2px 6px #0004;transition:.2s}.switch input:checked+.slider{background:#b82e6c}.switch input:checked+.slider:before{transform:translateX(22px)}.switch input:focus-visible+.slider{outline:4px solid var(--focus);outline-offset:3px}
+.range-wrap{display:flex;align-items:center;gap:9px;min-width:180px}.range-wrap input{width:135px;accent-color:#b82e6c}.danger-btn{background:#651638;color:white;border-color:#ffcade}.disabled-setting{opacity:.58}
+
+#librasBox{position:fixed;right:12px;bottom:84px;width:min(300px,72vw);background:#271127ee;color:#fff;border:3px solid #ffd5e6;border-radius:22px;padding:12px;z-index:45;display:none;box-shadow:0 12px 40px #0008}
+#librasBox.show{display:block}#librasBox .hands{font-size:58px;line-height:1;text-align:center;animation:hands .75s ease-in-out infinite alternate}@keyframes hands{to{transform:rotate(7deg) scale(1.06)}}#librasBox strong{display:block;text-align:center;margin:8px}
 #srStatus{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+body.phase2 #stageWrap{width:82%;max-width:680px;margin-left:auto;margin-right:auto}#phaseBadge{position:absolute;z-index:12;top:8px;left:50%;transform:translateX(-50%);background:rgba(255,240,247,.94);border:2px solid #ffafd0;color:#7d1749;border-radius:999px;padding:5px 12px;font-weight:900;pointer-events:none}
+#stageWrap:after{content:"";position:absolute;inset:-25%;pointer-events:none;background:radial-gradient(circle at 50% 75%,#fff3 0 3%,transparent 28%),radial-gradient(circle at 25% 20%,#ffdfef33,transparent 30%);animation:glow 5s ease-in-out infinite alternate}@keyframes glow{to{transform:scale(1.08) rotate(1deg);opacity:.65}}
 
-body.phase2 #stageWrap{width:82%;max-width:680px;margin-left:auto;margin-right:auto}
-#phaseBadge{position:absolute;z-index:12;top:8px;left:50%;transform:translateX(-50%);
-background:rgba(255,240,247,.94);border:2px solid #ffafd0;color:#7d1749;border-radius:999px;
-padding:5px 12px;font-weight:900;pointer-events:none}
-@media(max-width:700px){body.phase2 #stageWrap{width:88%}}
+/* ACESSIBILIDADE */
+body.highcontrast{filter:contrast(1.35) saturate(1.15)}
+body.reduce-effects #stageWrap:after,body.reduce-effects .menu-visuals,body.reduce-effects #homeScreen:before{display:none}body.reduce-effects .menu-shell,body.reduce-effects #stageWrap,body.reduce-effects .btn,body.reduce-effects .menu-btn{box-shadow:none}
+body.no-animations *,body.no-animations *:before,body.no-animations *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+@media(prefers-reduced-motion:reduce){*,:before,:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+
+@media(max-width:700px){body.phase2 #stageWrap{width:88%}.how-grid{grid-template-columns:1fr}.menu-shell{min-height:94dvh}.menu-visuals{opacity:.12}}
+@media(max-width:520px){.pill{font-size:.76rem;padding:6px 8px}.btn{font-size:.78rem;padding:7px 9px}#stageWrap{width:98vw;max-height:74dvh}.settings-fab{width:44px;height:44px;min-height:44px}.menu-title{font-size:clamp(2rem,13vw,3.2rem)}.project-footer{font-size:.7rem}.setting-row{grid-template-columns:1fr}.range-wrap{min-width:0}}
+@media(max-height:520px) and (orientation:landscape){.menu-shell{grid-template-columns:1fr 1fr;grid-template-rows:1fr auto;min-height:auto}.menu-head{align-self:center}.menu-actions{align-self:center}.project-footer{grid-column:1/-1}.menu-visuals{display:none}.menu-title{font-size:clamp(2rem,7vw,3.4rem)}#stageWrap{max-height:66dvh}.controls{max-height:28dvh;overflow:auto}}
 </style>
 </head>
 <body>
-<div id="app">
+
+<section id="homeScreen" aria-labelledby="mainTitle">
+  <div class="menu-shell">
+    <button class="settings-fab" id="openSettings" aria-label="Abrir configurações">⚙️</button>
+    <div class="menu-visuals" aria-hidden="true">
+      <img src="assets/ovulo.png" alt=""><img src="assets/blastocisto.png" alt=""><img src="assets/utero.png" alt="">
+    </div>
+    <header class="menu-head">
+      <div class="museum-kicker">🏛️ Anatomia • Ciência • Museu</div>
+      <h1 class="menu-title" id="mainTitle">MERGE<br>REPRODUTOR</h1>
+      <p class="menu-subtitle">Jogo educativo de anatomia humana desenvolvido para aproximar conteúdos do sistema reprodutor de uma experiência interativa, acessível e museológica.</p>
+    </header>
+    <nav class="menu-actions" aria-label="Menu principal">
+      <button class="menu-btn primary" id="startGame"><span class="btn-icon">▶</span> Iniciar jogo<small>Entrar diretamente na partida</small></button>
+      <button class="menu-btn" id="openHow"><span class="btn-icon">🧬</span> Como jogar</button>
+      <button class="menu-btn" id="openMudi"><span class="btn-icon">🏛️</span> Sobre o MUDI-UEM</button>
+      <button class="menu-btn" id="openSettings2"><span class="btn-icon">⚙️</span> Configurações</button>
+    </nav>
+    <footer class="project-footer">
+      <strong>Projeto desenvolvido por estudantes de Ciências Biológicas – UEM</strong>
+      <span>Disciplina: Anatomia Humana</span>
+      <div class="credit-names" aria-label="Integrantes do projeto">
+        <span>Rafaela Faben Machado</span><span>•</span><span>Ana Julia Andrade Stipp</span><span>•</span><span>Maria Eduarda Albuquerque Debortoli</span><span>•</span><span>Livia Valentina Baesso Tozzo</span>
+      </div>
+    </footer>
+  </div>
+</section>
+
+<div id="app" class="screen-hidden" aria-label="Área do jogo Merge Reprodutor">
   <div class="top">
     <div class="pill">⭐ <span id="score">0</span></div>
     <div class="pill">🪙 <span id="coins">0</span></div>
@@ -55,8 +118,8 @@ padding:5px 12px;font-weight:900;pointer-events:none}
     <div class="pill">🏆 <span id="level">Óvulo</span></div>
   </div>
   <div id="stageWrap"><div id="phaseBadge">FASE 1</div>
-    <canvas id="game"></canvas>
-    <div id="danger"></div>
+    <canvas id="game" aria-label="Tabuleiro do jogo. Toque ou clique para soltar uma estrutura."></canvas>
+    <div id="danger" aria-hidden="true"></div>
     <div id="tip">Toque para soltar • iguais se fundem</div>
     <img id="next" alt="Próxima peça">
   </div>
@@ -70,8 +133,10 @@ padding:5px 12px;font-weight:900;pointer-events:none}
     <button class="btn" id="font">A+ Fonte</button>
     <button class="btn" id="sound">🔊 Som</button>
     <button class="btn" id="restart">↻ Reiniciar</button>
+    <button class="btn" id="gameMenu">🏛️ Menu</button>
   </div>
 </div>
+
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="srStatus" aria-live="assertive"></div>
 <div id="librasBox" role="dialog" aria-label="Apoio visual em Libras">
@@ -80,187 +145,158 @@ padding:5px 12px;font-weight:900;pointer-events:none}
  <button class="btn" onclick="document.getElementById('librasBox').classList.remove('show')">Fechar</button>
 </div>
 
+<div class="modal" id="howModal" role="dialog" aria-modal="true" aria-labelledby="howTitle"><div class="card wide">
+  <h2 id="howTitle">🧬 Como jogar</h2>
+  <div class="how-grid">
+    <div class="how-step"><div class="step-icon">👆</div><b>1. Solte</b><span>Toque ou clique no tabuleiro para soltar a próxima estrutura.</span></div>
+    <div class="how-step"><div class="step-icon">➕</div><b>2. Combine</b><span>Duas estruturas iguais se fundem e formam o próximo nível.</span></div>
+    <div class="how-step"><div class="step-icon">🏆</div><b>3. Avance</b><span>Some pontos, administre o espaço e tente chegar ao “Bebê saudável”.</span></div>
+  </div>
+  <p><strong>Objetivo:</strong> realizar merges sucessivos sem deixar o tabuleiro ultrapassar a linha de perigo. Você possui duas chances de recuperação, uma substituição de estrutura e um recurso de mistura por partida.</p>
+  <h3>Elementos do sistema reprodutor no jogo</h3>
+  <p class="small">A sequência abaixo é uma progressão <strong>lúdica do jogo</strong>, usada para revisão visual de estruturas e etapas relacionadas à reprodução; ela não representa, isoladamente, uma linha temporal anatômica ou embriológica.</p>
+  <div class="sequence" aria-label="Sequência de estruturas do jogo">
+    <div class="seq-item"><img src="assets/ovulo.png" alt="Óvulo">Óvulo</div><div class="seq-item"><img src="assets/zigoto.png" alt="Zigoto">Zigoto</div><div class="seq-item"><img src="assets/morula.png" alt="Mórula">Mórula</div><div class="seq-item"><img src="assets/blastocisto.png" alt="Blastocisto">Blastocisto</div><div class="seq-item"><img src="assets/tuba.png" alt="Tuba e ovulação">Tuba / ovulação</div><div class="seq-item"><img src="assets/ovario.png" alt="Ovário">Ovário</div><div class="seq-item"><img src="assets/colo.png" alt="Colo do útero">Colo do útero</div><div class="seq-item"><img src="assets/embriao.png" alt="Embrião">Embrião</div><div class="seq-item"><img src="assets/utero.png" alt="Sistema genital">Sistema genital</div><div class="seq-item"><img src="assets/bebe.png" alt="Bebê saudável">Bebê saudável</div>
+  </div>
+  <div class="modal-actions"><button class="btn closePanel">← Voltar</button></div>
+</div></div>
+
+<div class="modal" id="mudiModal" role="dialog" aria-modal="true" aria-labelledby="mudiTitle"><div class="card wide">
+  <h2 id="mudiTitle">🏛️ Sobre o MUDI-UEM</h2>
+  <p>O <strong>Museu Dinâmico Interdisciplinar (MUDI)</strong> integra a Universidade Estadual de Maringá e atua aproximando universidade e comunidade por meio de educação, ciência, cultura e divulgação científica.</p>
+  <div class="museum-note"><strong>Ciência para além da sala de aula</strong><br>O MUDI reúne ações de ensino, pesquisa e extensão, promove a popularização do conhecimento e utiliza exposições, atividades educativas e experiências interdisciplinares para tornar a ciência mais acessível ao público.</div>
+  <p>O <strong>MERGE REPRODUTOR</strong> dialoga com essa proposta ao transformar conteúdos de Anatomia Humana em uma experiência interativa. O jogo pode ser utilizado como apoio educativo em contextos universitários e museológicos, estimulando observação, associação visual e revisão de conceitos.</p>
+  <p>O próprio MUDI mantém atividades e acervos relacionados à saúde, anatomia e sistema reprodutor, reforçando a conexão entre conhecimento acadêmico, educação e comunidade.</p>
+  <p><a class="museum-link" href="https://mudi.uem.br/" target="_blank" rel="noopener noreferrer">🔗 Conhecer o site oficial do MUDI-UEM</a></p>
+  <div class="modal-actions"><button class="btn closePanel">← Voltar</button></div>
+</div></div>
+
+<div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><div class="card wide">
+  <h2 id="settingsTitle">⚙️ Configurações e acessibilidade</h2>
+  <div class="settings-list">
+    <section class="settings-group" aria-labelledby="accessTitle"><h3 id="accessTitle">Acessibilidade</h3>
+      <div class="setting-row"><div class="setting-copy"><strong>Animações da interface</strong><small>Desativa movimentos decorativos; a física do jogo continua funcionando.</small></div><label class="switch"><input id="cfgAnimations" type="checkbox"><span class="slider"></span></label></div>
+      <div class="setting-row"><div class="setting-copy"><strong>Tamanho da fonte</strong><small>Ajuste geral de legibilidade.</small></div><div class="range-wrap"><input id="cfgFont" type="range" min="90" max="130" step="10" aria-label="Tamanho da fonte"><output id="fontValue">100%</output></div></div>
+      <div class="setting-row"><div class="setting-copy"><strong>Alto contraste</strong><small>Aumenta a diferenciação visual de textos e controles.</small></div><label class="switch"><input id="cfgContrast" type="checkbox"><span class="slider"></span></label></div>
+      <div class="setting-row"><div class="setting-copy"><strong>Reduzir efeitos visuais</strong><small>Remove brilhos e sombras decorativas.</small></div><label class="switch"><input id="cfgEffects" type="checkbox"><span class="slider"></span></label></div>
+    </section>
+    <section class="settings-group" aria-labelledby="soundTitle"><h3 id="soundTitle">Som</h3>
+      <div class="setting-row disabled-setting"><div class="setting-copy"><strong>Música de fundo</strong><small>O jogo original não possui trilha musical contínua; por isso este controle permanece indisponível.</small></div><label class="switch"><input type="checkbox" disabled aria-label="Música de fundo indisponível"><span class="slider"></span></label></div>
+      <div class="setting-row"><div class="setting-copy"><strong>Efeitos sonoros</strong><small>Ativa sons de acerto, fusão, vitória e feedback do jogo.</small></div><label class="switch"><input id="cfgSfx" type="checkbox"><span class="slider"></span></label></div>
+      <div class="setting-row"><div class="setting-copy"><strong>Volume</strong><small>Controla o volume dos efeitos sonoros.</small></div><div class="range-wrap"><input id="cfgVolume" type="range" min="0" max="100" step="5" aria-label="Volume dos efeitos"><output id="volumeValue">70%</output></div></div>
+    </section>
+    <section class="settings-group" aria-labelledby="gameTitle"><h3 id="gameTitle">Jogo</h3>
+      <div class="setting-row"><div class="setting-copy"><strong>Reiniciar partida</strong><small>Apaga o progresso da partida atual e volta ao início.</small></div><button class="btn danger-btn" id="resetFromSettings">Reiniciar</button></div>
+      <div class="setting-row"><div class="setting-copy"><strong>Menu principal</strong><small>Fecha as configurações e retorna à tela inicial.</small></div><button class="btn" id="backHomeSettings">Voltar ao menu</button></div>
+    </section>
+  </div>
+  <div class="modal-actions"><button class="btn closePanel">← Voltar</button></div>
+</div></div>
+
 <div class="modal" id="replaceModal"><div class="card">
-  <h2>Substituir uma estrutura</h2>
-  <p>Primeiro toque em uma peça no tabuleiro. Depois escolha a nova estrutura.</p>
-  <div class="grid" id="choices"></div>
-  <button class="btn" onclick="closeReplace()">Cancelar</button>
+  <h2>Substituir uma estrutura</h2><p>Primeiro toque em uma peça no tabuleiro. Depois escolha a nova estrutura.</p><div class="grid" id="choices"></div><button class="btn" onclick="closeReplace()">Cancelar</button>
 </div></div>
-
 <div class="modal" id="infoModal"><div class="card">
-  <h2>Blastocisto</h2>
-  <img src="assets/blastocisto_info.png" alt="Imagem didática do blastocisto">
-  <p class="small">Imagem didática fornecida para o jogo.</p>
-  <button class="btn" onclick="document.getElementById('infoModal').classList.remove('show')">Fechar</button>
+  <h2>Blastocisto</h2><img src="assets/blastocisto_info.png" alt="Imagem didática do blastocisto"><p class="small">Imagem didática fornecida para o jogo.</p><button class="btn" onclick="document.getElementById('infoModal').classList.remove('show')">Fechar</button>
 </div></div>
-
 <div class="modal" id="winModal"><div class="card">
-  <h1>🏆 Bebê saudável!</h1>
-  <p>Você completou a sequência!</p>
-  <video id="winVideo" src="assets/vitoria.mp4" playsinline controls></video>
-  <div style="margin-top:10px"><button class="btn" onclick="newGame()">Jogar novamente</button> <button class="btn" onclick="continueGame()">Continuar</button></div>
+  <h1>🏆 Bebê saudável!</h1><p>Você completou a sequência!</p><video id="winVideo" src="assets/vitoria.mp4" playsinline controls></video><div style="margin-top:10px"><button class="btn" onclick="newGame()">Jogar novamente</button> <button class="btn" onclick="continueGame()">Continuar</button></div>
 </div></div>
 
 <script>
+const SETTINGS_KEY="mergeReprodutorSettingsV3";
+const DEFAULT_SETTINGS={animations:true,fontSize:100,highContrast:false,reduceEffects:false,sfx:true,volume:70};
+let settings={...DEFAULT_SETTINGS};
+try{settings={...DEFAULT_SETTINGS,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")}}catch(e){}
+
+function saveSettings(){try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings))}catch(e){}}
+function applySettings(){
+ document.documentElement.style.setProperty("--font-scale",settings.fontSize/100);
+ document.body.classList.toggle("highcontrast",!!settings.highContrast);
+ document.body.classList.toggle("reduce-effects",!!settings.reduceEffects);
+ document.body.classList.toggle("no-animations",!settings.animations);
+ soundOn=!!settings.sfx;
+ document.querySelectorAll("audio").forEach(a=>a.volume=Math.max(0,Math.min(1,settings.volume/100)));
+ const soundBtn=document.getElementById("sound");if(soundBtn)soundBtn.textContent=soundOn?"🔊 Som":"🔇 Som";
+ const map={cfgAnimations:settings.animations,cfgContrast:settings.highContrast,cfgEffects:settings.reduceEffects,cfgSfx:settings.sfx};
+ Object.entries(map).forEach(([id,val])=>{let el=document.getElementById(id);if(el)el.checked=!!val});
+ let f=document.getElementById("cfgFont"),v=document.getElementById("cfgVolume");if(f)f.value=settings.fontSize;if(v)v.value=settings.volume;
+ let fo=document.getElementById("fontValue"),vo=document.getElementById("volumeValue");if(fo)fo.value=settings.fontSize+"%";if(vo)vo.value=settings.volume+"%";
+}
+
+const homeScreen=document.getElementById("homeScreen"),app=document.getElementById("app");
+let lastFocused=null;
+function showHome(){paused=true;app.classList.add("screen-hidden");homeScreen.classList.remove("screen-hidden");document.getElementById("librasBox").classList.remove("show");window.scrollTo(0,0);setTimeout(()=>document.getElementById("startGame").focus(),0)}
+function showGame(){homeScreen.classList.add("screen-hidden");app.classList.remove("screen-hidden");paused=false;grace=Math.max(grace,1.2);setTimeout(()=>{resize();c.focus?.()},30)}
+function openPanel(id){lastFocused=document.activeElement;let m=document.getElementById(id);m.classList.add("show");setTimeout(()=>m.querySelector("button,input,a")?.focus(),0)}
+function closePanel(m){m.classList.remove("show");lastFocused?.focus?.()}
+document.getElementById("startGame").onclick=showGame;
+document.getElementById("openHow").onclick=()=>openPanel("howModal");
+document.getElementById("openMudi").onclick=()=>openPanel("mudiModal");
+document.getElementById("openSettings").onclick=()=>openPanel("settingsModal");
+document.getElementById("openSettings2").onclick=()=>openPanel("settingsModal");
+document.getElementById("gameMenu").onclick=showHome;
+document.querySelectorAll(".closePanel").forEach(b=>b.onclick=()=>closePanel(b.closest(".modal")));
+document.querySelectorAll(".modal").forEach(m=>m.addEventListener("pointerdown",e=>{if(e.target===m&&["howModal","mudiModal","settingsModal"].includes(m.id))closePanel(m)}));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){let m=document.querySelector(".modal.show");if(m&&["howModal","mudiModal","settingsModal"].includes(m.id))closePanel(m)}});
+
+document.getElementById("cfgAnimations").onchange=e=>{settings.animations=e.target.checked;saveSettings();applySettings()};
+document.getElementById("cfgFont").oninput=e=>{settings.fontSize=Number(e.target.value);saveSettings();applySettings()};
+document.getElementById("cfgContrast").onchange=e=>{settings.highContrast=e.target.checked;saveSettings();applySettings()};
+document.getElementById("cfgEffects").onchange=e=>{settings.reduceEffects=e.target.checked;saveSettings();applySettings()};
+document.getElementById("cfgSfx").onchange=e=>{settings.sfx=e.target.checked;saveSettings();applySettings()};
+document.getElementById("cfgVolume").oninput=e=>{settings.volume=Number(e.target.value);saveSettings();applySettings()};
+document.getElementById("backHomeSettings").onclick=()=>{closePanel(document.getElementById("settingsModal"));showHome()};
+document.getElementById("resetFromSettings").onclick=()=>{if(confirm("Reiniciar a partida e apagar o progresso atual?")){newGame();try{localStorage.removeItem("mergeReprodutorGameState")}catch(e){};toast("Partida reiniciada.")}};
+
 const LEVELS=[
- {n:"Óvulo",img:"assets/ovulo.png",r:22,pts:10},
- {n:"Zigoto",img:"assets/zigoto.png",r:27,pts:20},
- {n:"Mórula",img:"assets/morula.png",r:33,pts:40},
- {n:"Blastocisto",img:"assets/blastocisto.png",r:40,pts:80},
- {n:"Tuba / ovulação",img:"assets/tuba.png",r:47,pts:140},
- {n:"Ovário",img:"assets/ovario.png",r:54,pts:220},
- {n:"Colo do útero",img:"assets/colo.png",r:61,pts:320},
- {n:"Embrião",img:"assets/embriao.png",r:69,pts:460},
- {n:"Sistema genital",img:"assets/utero.png",r:78,pts:650},
- {n:"Bebê saudável",img:"assets/bebe.png",r:90,pts:1000}
+ {n:"Óvulo",img:"assets/ovulo.png",r:22,pts:10},{n:"Zigoto",img:"assets/zigoto.png",r:27,pts:20},{n:"Mórula",img:"assets/morula.png",r:33,pts:40},{n:"Blastocisto",img:"assets/blastocisto.png",r:40,pts:80},{n:"Tuba / ovulação",img:"assets/tuba.png",r:47,pts:140},{n:"Ovário",img:"assets/ovario.png",r:54,pts:220},{n:"Colo do útero",img:"assets/colo.png",r:61,pts:320},{n:"Embrião",img:"assets/embriao.png",r:69,pts:460},{n:"Sistema genital",img:"assets/utero.png",r:78,pts:650},{n:"Bebê saudável",img:"assets/bebe.png",r:90,pts:1000}
 ];
 const imgs=LEVELS.map(x=>{let i=new Image();i.src=x.img;return i});
 const c=document.getElementById("game"),ctx=c.getContext("2d"),wrap=document.getElementById("stageWrap");
-let W=600,H=800,balls=[],nextLevel=0,score=0,coins=0,lives=2,shakeUsed=false,replaceUsed=false,soundOn=true,paused=false,last=performance.now(),dangerTimer=0,grace=0,selected=null;
-const nextEl=document.getElementById("next"), toastEl=document.getElementById("toast");
-function resize(){let r=wrap.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;c.width=W*d;c.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
-addEventListener("resize",resize);resize();
-function beep(f=520,d=.07){if(!soundOn)return;try{let a=new (AudioContext||webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.frequency.value=f;g.gain.value=.05;o.connect(g);g.connect(a.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,a.currentTime+d);o.stop(a.currentTime+d)}catch(e){}}
+let W=600,H=800,balls=[],nextLevel=0,score=0,coins=0,lives=2,shakeUsed=false,replaceUsed=false,soundOn=true,paused=true,last=performance.now(),dangerTimer=0,grace=0,selected=null;
+const nextEl=document.getElementById("next"),toastEl=document.getElementById("toast");
+function resize(){let r=wrap.getBoundingClientRect();if(!r.width||!r.height)return;let d=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;c.width=W*d;c.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
+addEventListener("resize",resize);
+function beep(f=520,d=.07){if(!soundOn||settings.volume<=0)return;try{let AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;let a=new AC(),o=a.createOscillator(),g=a.createGain();o.frequency.value=f;g.gain.value=.05*(settings.volume/100);o.connect(g);g.connect(a.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,a.currentTime+d);o.stop(a.currentTime+d)}catch(e){}}
 function toast(t){toastEl.textContent=t;toastEl.classList.add("show");setTimeout(()=>toastEl.classList.remove("show"),1100)}
 function setNext(){nextLevel=Math.random()<.72?0:(Math.random()<.78?1:2);nextEl.src=LEVELS[nextLevel].img}
-function drop(x){
-playGameAudio('audioAcerto');if(paused)return;let L=LEVELS[nextLevel],r=L.r;balls.push({x:Math.max(r+3,Math.min(W-r-3,x)),y:30+r,vx:0,vy:520,lv:nextLevel,r,mergeLock:.06});beep(360);setNext()}
-c.addEventListener("pointerdown",e=>{
- const rect=c.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;
- if(selected==="pick"){let b=nearest(x,y);if(b){selected=b;openChoices();}return}
- drop(x);
-});
+function drop(x){playGameAudio('audioAcerto');if(paused)return;let L=LEVELS[nextLevel],r=L.r;balls.push({x:Math.max(r+3,Math.min(W-r-3,x)),y:30+r,vx:0,vy:520,lv:nextLevel,r,mergeLock:.06});beep(360);setNext()}
+c.addEventListener("pointerdown",e=>{const rect=c.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;if(selected==="pick"){let b=nearest(x,y);if(b){selected=b;openChoices()}return}drop(x)});
 function nearest(x,y){let best=null,bd=1e9;for(let b of balls){let d=Math.hypot(b.x-x,b.y-y);if(d<b.r+15&&d<bd){best=b;bd=d}}return best}
-function merge(i,j){
- let a=balls[i],b=balls[j]; if(!a||!b||a.lv!==b.lv||a.lv>=LEVELS.length-1)return false;
- let nl=a.lv+1,x=(a.x+b.x)/2,y=(a.y+b.y)/2,vx=(a.vx+b.vx)/2,vy=-70;
- let hi=Math.max(i,j),lo=Math.min(i,j);balls.splice(hi,1);balls.splice(lo,1);
- let L=LEVELS[nl];balls.push({x,y,vx,vy,lv:nl,r:L.r,mergeLock:.10});
- score+=L.pts;coins+=Math.max(1,nl);document.getElementById("score").textContent=score;document.getElementById("coins").textContent=coins;document.getElementById("level").textContent=L.n;
- beep(520+nl*55,.1); if(nl===LEVELS.length-1)win(); return true;
-}
-function physics(dt){
- const floor=H-8;
- for(let b of balls){b.mergeLock=Math.max(0,b.mergeLock-dt);b.vy+=2100*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.vx*=.995;
-  if(b.x-b.r<4){b.x=b.r+4;b.vx=Math.abs(b.vx)*.55}
-  if(b.x+b.r>W-4){b.x=W-b.r-4;b.vx=-Math.abs(b.vx)*.55}
-  if(b.y+b.r>floor){b.y=floor-b.r;b.vy*=-.18;b.vx*=.82;if(Math.abs(b.vy)<20)b.vy=0}
- }
- for(let k=0;k<3;k++){
-  let merged=false;
-  outer:for(let i=0;i<balls.length;i++)for(let j=i+1;j<balls.length;j++){
-   let a=balls[i],b=balls[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||.001,min=a.r+b.r;
-   if(d<min){
-    if(a.lv===b.lv&&a.mergeLock<=0&&b.mergeLock<=0){merged=merge(i,j);if(merged)break outer}
-    let nx=dx/d,ny=dy/d,ov=min-d,wa=b.r/(a.r+b.r),wb=a.r/(a.r+b.r);
-    a.x-=nx*ov*wa;a.y-=ny*ov*wa;b.x+=nx*ov*wb;b.y+=ny*ov*wb;
-    let rvx=b.vx-a.vx,rvy=b.vy-a.vy,rel=rvx*nx+rvy*ny;
-    if(rel<0){let imp=-rel*.35;a.vx-=imp*nx;a.vy-=imp*ny;b.vx+=imp*nx;b.vy+=imp*ny}
-   }
-  } if(!merged)break;
- }
- if(grace>0){grace-=dt;dangerTimer=0;return}
- let line=H*.16,over=balls.some(b=>b.y-b.r<line && Math.abs(b.vy)<45);
- dangerTimer=over?dangerTimer+dt:0;
- if(dangerTimer>.85){dangerTimer=0;loseChance()}
-}
-function loseChance(){
- if(lives>0){lives--;document.getElementById("lives").textContent=lives;toast("❤️ Chance usada! Tabuleiro aliviado.");beep(180,.18);
-  balls.sort((a,b)=>a.y-b.y);balls.splice(0,Math.max(2,Math.ceil(balls.length*.22)));grace=2.2;
- }else{paused=true;toast("Fim de jogo");setTimeout(()=>{if(confirm("Fim de jogo. Jogar novamente?"))newGame()},500)}
-}
-function draw(){
- ctx.clearRect(0,0,W,H);
- let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#6d1c5066");g.addColorStop(1,"#ffbad055");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
- for(let b of balls){ctx.save();ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.clip();let im=imgs[b.lv];if(im.complete)ctx.drawImage(im,b.x-b.r,b.y-b.r,b.r*2,b.r*2);ctx.restore();
-  ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.stroke();
-  ctx.beginPath();ctx.arc(b.x-b.r*.28,b.y-b.r*.32,b.r*.18,0,Math.PI*2);ctx.fillStyle="#ffffff55";ctx.fill();
- }
-}
+function merge(i,j){let a=balls[i],b=balls[j];if(!a||!b||a.lv!==b.lv||a.lv>=LEVELS.length-1)return false;let nl=a.lv+1,x=(a.x+b.x)/2,y=(a.y+b.y)/2,vx=(a.vx+b.vx)/2,vy=-70;let hi=Math.max(i,j),lo=Math.min(i,j);balls.splice(hi,1);balls.splice(lo,1);let L=LEVELS[nl];balls.push({x,y,vx,vy,lv:nl,r:L.r,mergeLock:.10});score+=L.pts;coins+=Math.max(1,nl);document.getElementById("score").textContent=score;document.getElementById("coins").textContent=coins;document.getElementById("level").textContent=L.n;playGameAudio('audioFusao');beep(520+nl*55,.1);if(nl===LEVELS.length-1)win();return true}
+function physics(dt){const floor=H-8;for(let b of balls){b.mergeLock=Math.max(0,b.mergeLock-dt);b.vy+=2100*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.vx*=.995;if(b.x-b.r<4){b.x=b.r+4;b.vx=Math.abs(b.vx)*.55}if(b.x+b.r>W-4){b.x=W-b.r-4;b.vx=-Math.abs(b.vx)*.55}if(b.y+b.r>floor){b.y=floor-b.r;b.vy*=-.18;b.vx*=.82;if(Math.abs(b.vy)<20)b.vy=0}}
+ for(let k=0;k<3;k++){let merged=false;outer:for(let i=0;i<balls.length;i++)for(let j=i+1;j<balls.length;j++){let a=balls[i],b=balls[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||.001,min=a.r+b.r;if(d<min){if(a.lv===b.lv&&a.mergeLock<=0&&b.mergeLock<=0){merged=merge(i,j);if(merged)break outer}let nx=dx/d,ny=dy/d,ov=min-d,wa=b.r/(a.r+b.r),wb=a.r/(a.r+b.r);a.x-=nx*ov*wa;a.y-=ny*ov*wa;b.x+=nx*ov*wb;b.y+=ny*ov*wb;let rvx=b.vx-a.vx,rvy=b.vy-a.vy,rel=rvx*nx+rvy*ny;if(rel<0){let imp=-rel*.35;a.vx-=imp*nx;a.vy-=imp*ny;b.vx+=imp*nx;b.vy+=imp*ny}}}if(!merged)break}
+ if(grace>0){grace-=dt;dangerTimer=0;return}let line=H*.16,over=balls.some(b=>b.y-b.r<line&&Math.abs(b.vy)<45);dangerTimer=over?dangerTimer+dt:0;if(dangerTimer>.85){dangerTimer=0;loseChance()}}
+function loseChance(){if(lives>0){lives--;document.getElementById("lives").textContent=lives;toast("❤️ Chance usada! Tabuleiro aliviado.");beep(180,.18);balls.sort((a,b)=>a.y-b.y);balls.splice(0,Math.max(2,Math.ceil(balls.length*.22)));grace=2.2}else{paused=true;toast("Fim de jogo");setTimeout(()=>{if(confirm("Fim de jogo. Jogar novamente?"))newGame()},500)}}
+function draw(){if(!W||!H)return;ctx.clearRect(0,0,W,H);let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#6d1c5066");g.addColorStop(1,"#ffbad055");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);for(let b of balls){ctx.save();ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.clip();let im=imgs[b.lv];if(im.complete)ctx.drawImage(im,b.x-b.r,b.y-b.r,b.r*2,b.r*2);ctx.restore();ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.stroke();ctx.beginPath();ctx.arc(b.x-b.r*.28,b.y-b.r*.32,b.r*.18,0,Math.PI*2);ctx.fillStyle="#ffffff55";ctx.fill()}}
 function loop(t){let dt=Math.min(.025,(t-last)/1000);last=t;if(!paused)physics(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
-document.getElementById("shake").onclick=()=>{
- if(shakeUsed)return;shakeUsed=true;document.getElementById("shake").disabled=true;grace=3;
- for(let b of balls){b.vx+=(Math.random()-.5)*700;b.vy=-180-Math.random()*220}toast("🫨 Chacoalhada grátis!");beep(700,.12)
-};
+document.getElementById("shake").onclick=()=>{if(shakeUsed)return;shakeUsed=true;document.getElementById("shake").disabled=true;grace=3;for(let b of balls){b.vx+=(Math.random()-.5)*700;b.vy=-180-Math.random()*220}toast("🫨 Chacoalhada grátis!");beep(700,.12)};
 document.getElementById("replace").onclick=()=>{if(replaceUsed)return;selected="pick";toast("Toque na peça que deseja substituir")};
-function openChoices(){let box=document.getElementById("choices");box.innerHTML="";LEVELS.slice(0,-1).forEach((L,i)=>{let d=document.createElement("div");d.className="choice";d.innerHTML=`<img src="${L.img}"><div>${L.n}</div>`;d.onclick=()=>replaceWith(i);box.appendChild(d)});document.getElementById("replaceModal").classList.add("show")}
+function openChoices(){let box=document.getElementById("choices");box.innerHTML="";LEVELS.slice(0,-1).forEach((L,i)=>{let d=document.createElement("button");d.type="button";d.className="choice";d.innerHTML=`<img src="${L.img}" alt=""><div>${L.n}</div>`;d.setAttribute("aria-label","Substituir por "+L.n);d.onclick=()=>replaceWith(i);box.appendChild(d)});document.getElementById("replaceModal").classList.add("show")}
 function replaceWith(lv){if(!selected||selected==="pick")return;selected.lv=lv;selected.r=LEVELS[lv].r;selected.mergeLock=.4;replaceUsed=true;document.getElementById("replace").disabled=true;document.getElementById("replaceModal").classList.remove("show");selected=null;grace=1.5;toast("🔄 Estrutura substituída!")}
 function closeReplace(){document.getElementById("replaceModal").classList.remove("show");selected=null}
 document.getElementById("info").onclick=()=>document.getElementById("infoModal").classList.add("show");
-document.getElementById("sound").onclick=e=>{soundOn=!soundOn;e.target.textContent=soundOn?"🔊 Som":"🔇 Som"};
+document.getElementById("sound").onclick=()=>{settings.sfx=!settings.sfx;saveSettings();applySettings()};
 document.getElementById("restart").onclick=()=>{if(confirm("Reiniciar a partida?"))newGame()};
-function win(){playGameAudio('audioVitoria');paused=true;coins+=50;document.getElementById("coins").textContent=coins;setTimeout(()=>{let m=document.getElementById("winModal");m.classList.add("show");let v=document.getElementById("winVideo");v.currentTime=0;v.play().catch(()=>{})},450)}
-function newGame(){balls=[];score=0;coins=0;lives=2;shakeUsed=false;replaceUsed=false;paused=false;dangerTimer=0;grace=1.5;selected=null;
- document.getElementById("score").textContent=0;document.getElementById("coins").textContent=0;document.getElementById("lives").textContent=2;document.getElementById("level").textContent="Óvulo";document.getElementById("shake").disabled=false;document.getElementById("replace").disabled=false;document.getElementById("winModal").classList.remove("show");document.getElementById("winVideo").pause();setNext()}
+function win(){playGameAudio('audioVitoria');paused=true;coins+=50;document.getElementById("coins").textContent=coins;setTimeout(()=>{let m=document.getElementById("winModal");m.classList.add("show");let v=document.getElementById("winVideo");v.currentTime=0;v.muted=!soundOn;v.volume=Math.max(0,Math.min(1,settings.volume/100));v.play().catch(()=>{})},450)}
+function newGame(){balls=[];score=0;coins=0;lives=2;shakeUsed=false;replaceUsed=false;dangerTimer=0;grace=1.5;selected=null;safePhase=1;document.body.classList.remove("phase2");document.getElementById("phaseBadge").textContent="FASE 1";document.getElementById("score").textContent=0;document.getElementById("coins").textContent=0;document.getElementById("lives").textContent=2;document.getElementById("level").textContent="Óvulo";document.getElementById("shake").disabled=false;document.getElementById("replace").disabled=false;document.getElementById("winModal").classList.remove("show");document.getElementById("winVideo").pause();setNext();paused=!homeScreen.classList.contains("screen-hidden")}
 function continueGame(){document.getElementById("winModal").classList.remove("show");document.getElementById("winVideo").pause();paused=false;grace=3}
-
-function speak(txt){
- if(!("speechSynthesis" in window))return toast("Leitura de voz não disponível neste navegador.");
- speechSynthesis.cancel(); let u=new SpeechSynthesisUtterance(txt);u.lang="pt-BR";u.rate=.92;speechSynthesis.speak(u);
- document.getElementById("srStatus").textContent=txt;
-}
-document.getElementById("tts").onclick=()=>speak("Merge Reprodutivo. Junte duas estruturas iguais para criar a próxima. Você tem duas chances. Há uma chacoalhada e uma substituição por partida. A vitória acontece ao formar o bebê saudável.");
+function speak(txt){if(!("speechSynthesis" in window))return toast("Leitura de voz não disponível neste navegador.");speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(txt);u.lang="pt-BR";u.rate=.92;speechSynthesis.speak(u);document.getElementById("srStatus").textContent=txt}
+document.getElementById("tts").onclick=()=>speak("Merge Reprodutor. Junte duas estruturas iguais para criar a próxima. Você tem duas chances. Há uma mistura e uma substituição por partida. A vitória acontece ao formar o bebê saudável.");
 document.getElementById("libras").onclick=()=>document.getElementById("librasBox").classList.toggle("show");
-document.getElementById("contrast").onclick=()=>document.body.classList.toggle("highcontrast");
-document.getElementById("font").onclick=()=>document.body.classList.toggle("bigfont");
-document.querySelectorAll("button").forEach(b=>b.setAttribute("aria-label",b.textContent.trim()));
-
-
-function playGameAudio(id){
- const a=document.getElementById(id);
- if(a){a.currentTime=0;a.play().catch(()=>{});}
-}
-
-setNext();
-
-let safePhase=1;
-function safePhaseCheck(){
- try{
-   if(safePhase===1 && typeof score!=="undefined" && score>=1200){
-     safePhase=2;
-     document.body.classList.add("phase2");
-     const pb=document.getElementById("phaseBadge");
-     if(pb) pb.textContent="FASE 2 • ESPAÇO MENOR";
-     if(typeof toast==="function") toast("FASE 2: espaço menor!");
-   }
- }catch(e){}
-}
-function safeLiquefier(){
- try{
-   if(typeof shakeUsed!=="undefined" && shakeUsed){
-     if(typeof toast==="function") toast("Liquidificador já utilizado.");
-     return;
-   }
-   if(typeof shakeUsed!=="undefined") shakeUsed=true;
-   if(typeof playGameAudio==="function") playGameAudio("audioFusao");
-   if(typeof balls!=="undefined" && Array.isArray(balls)){
-     // Shake like a blender: random impulses only. Do NOT rewrite positions or run timers.
-     balls.forEach(function(b){
-       if(!b) return;
-       if(typeof b.vx==="number") b.vx += (Math.random()-.5)*900;
-       if(typeof b.vy==="number") b.vy += -250-Math.random()*350;
-     });
-   }
-   if(typeof toast==="function") toast("🌪️ Liquidificador! Estruturas misturadas sem perder chance.");
- }catch(e){
-   console.warn("Liquefier fallback",e);
- }
-}
-
+document.getElementById("contrast").onclick=()=>{settings.highContrast=!settings.highContrast;saveSettings();applySettings()};
+document.getElementById("font").onclick=()=>{settings.fontSize=settings.fontSize>=130?100:settings.fontSize+10;saveSettings();applySettings()};
+function playGameAudio(id){if(!soundOn||settings.volume<=0)return;const a=document.getElementById(id);if(a){a.volume=Math.max(0,Math.min(1,settings.volume/100));a.currentTime=0;a.play().catch(()=>{})}}
+setNext();let safePhase=1;
+function safePhaseCheck(){try{if(safePhase===1&&typeof score!=="undefined"&&score>=1200){safePhase=2;document.body.classList.add("phase2");const pb=document.getElementById("phaseBadge");if(pb)pb.textContent="FASE 2 • ESPAÇO MENOR";if(typeof toast==="function")toast("FASE 2: espaço menor!")}}catch(e){}}
+function safeLiquefier(){try{if(typeof shakeUsed!=="undefined"&&shakeUsed){if(typeof toast==="function")toast("Liquidificador já utilizado.");return}if(typeof shakeUsed!=="undefined")shakeUsed=true;document.getElementById("shake").disabled=true;if(typeof playGameAudio==="function")playGameAudio("audioFusao");if(typeof balls!=="undefined"&&Array.isArray(balls)){balls.forEach(function(b){if(!b)return;if(typeof b.vx==="number")b.vx+=(Math.random()-.5)*900;if(typeof b.vy==="number")b.vy+=-250-Math.random()*350})}if(typeof toast==="function")toast("🌪️ Liquidificador! Estruturas misturadas sem perder chance.")}catch(e){console.warn("Liquefier fallback",e)}}
 if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
-
-setTimeout(function(){
- const b=document.getElementById("shake");
- if(b){
-   b.onclick=function(ev){if(ev){ev.preventDefault();ev.stopPropagation();}safeLiquefier();};
-   b.textContent="🌪️ Liquidificador";
-   b.setAttribute("aria-label","Liquidificador: mistura as estruturas sem perder chance");
- }
-},0);
+setTimeout(function(){const b=document.getElementById("shake");if(b){b.onclick=function(ev){if(ev){ev.preventDefault();ev.stopPropagation()}safeLiquefier()};b.textContent="🌪️ Liquidificador";b.setAttribute("aria-label","Liquidificador: mistura as estruturas sem perder chance")}},0);
 setInterval(safePhaseCheck,700);
-
+document.querySelectorAll("button").forEach(b=>{if(!b.getAttribute("aria-label"))b.setAttribute("aria-label",b.textContent.trim())});
+applySettings();showHome();
 </script>
-
 <audio id="audioAcerto" preload="auto" src="assets/acerto.mp3"></audio>
 <audio id="audioFusao" preload="auto" src="assets/fusao.mp3"></audio>
 <audio id="audioVitoria" preload="auto" src="assets/vitoria.mp3"></audio>
